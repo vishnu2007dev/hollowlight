@@ -102,10 +102,14 @@ tests/core/   unit tests for everything in src/core
 
 ## Deployment
 
-The build is plain static files in `dist/`, so it runs on any static host.
+The build is plain static files in `dist/`, so it runs on any static host. The live version is on Cloudflare:
 
-- **Cloudflare (recommended):** connect the repo in the Cloudflare dashboard (build command `npm run build`, output `dist`), or deploy from your machine with `npm run build && npx wrangler deploy` using [wrangler.jsonc](wrangler.jsonc). [public/_headers](public/_headers) sends the security headers (CSP, no framing, HSTS and more).
-- **GitHub Pages:** pushing to `main` runs [CI](.github/workflows/ci.yml) (audit → lint → typecheck → test → build) and [deploys to Pages](.github/workflows/deploy.yml). Turn it on under **Settings → Pages → Source: GitHub Actions**.
+```bash
+npm run build
+npx wrangler deploy
+```
+
+[wrangler.jsonc](wrangler.jsonc) serves `dist/`, and [public/_headers](public/_headers) sends the security headers (CSP, no framing, HSTS and more). Every push and pull request runs [CI](.github/workflows/ci.yml): audit → lint → typecheck → test → build.
 
 ## Contributing
 

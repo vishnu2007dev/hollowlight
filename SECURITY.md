@@ -1,6 +1,6 @@
 # Security policy
 
-Hollowlight is a static, client-only browser game: no server, no accounts, no network requests, and nothing leaves the player's browser. Saves live in `localStorage` on the player's own device.
+Hollowlight is a static, client-only browser game hosted on Cloudflare: no server, no accounts, no network requests, and nothing leaves the player's browser. Saves live in `localStorage` on the player's own device.
 
 ## Reporting a vulnerability
 
