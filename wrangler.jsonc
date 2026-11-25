@@ -2,7 +2,7 @@
   // Cloudflare config: serves the static build from dist/ (no server code).
   // Deploy with `npm run build && npx wrangler deploy`, or connect the GitHub repo in the Cloudflare dashboard.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hollowlight",
+  "name": "game",
   "compatibility_date": "2026-11-25",
   "assets": {
     "directory": "./dist"

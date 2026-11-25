@@ -4,7 +4,7 @@
 
 Built from scratch with **Phaser 3 + TypeScript**. No art or audio files: every texture is drawn in code and every sound is synthesised with the Web Audio API.
 
-**[▶ Play it in your browser](https://hollowlight.hollowlight.workers.dev)**
+**[▶ Play it in your browser](https://game.hollowlight.workers.dev)**
 
 <!-- Add a gameplay GIF or screenshot here, e.g. ![Gameplay](docs/gameplay.gif) -->
 

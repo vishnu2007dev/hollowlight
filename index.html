@@ -3,14 +3,72 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Hollowlight: a tiny arena survivor. Hold back the dark until dawn." />
+    <title>Hollowlight: a free browser arena survivor game</title>
+    <meta
+      name="description"
+      content="Play Hollowlight free in your browser. You're a lantern spirit holding back waves of shadow creatures until dawn: auto-firing weapons, level-up upgrades, bosses, combos and high scores. No download, works on phone and desktop."
+    />
+    <link rel="canonical" href="https://game.hollowlight.workers.dev/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#0b0a12" />
+    <meta name="color-scheme" content="dark" />
     <meta name="referrer" content="no-referrer" />
-    <title>Hollowlight</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='%23ffc35c'/></svg>" />
+
+    <!-- Link previews: LinkedIn, Discord, Slack, iMessage, Facebook, X -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hollowlight" />
+    <meta property="og:title" content="Hollowlight: hold back the dark until dawn" />
+    <meta property="og:description" content="A free arena survivor you can play right in your browser. Auto-firing weapons, upgrades, bosses and combos. Can you survive until dawn?" />
+    <meta property="og:url" content="https://game.hollowlight.workers.dev/" />
+    <meta property="og:image" content="https://game.hollowlight.workers.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Hollowlight gameplay: a glowing lantern surrounded by shadow creatures, with the title and a Play Free button" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hollowlight: hold back the dark until dawn" />
+    <meta name="twitter:description" content="A free arena survivor you can play right in your browser." />
+    <meta name="twitter:image" content="https://game.hollowlight.workers.dev/og-image.png" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Structured data for search engines (data only, never executed, so the CSP allows it) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Hollowlight",
+        "url": "https://game.hollowlight.workers.dev/",
+        "image": "https://game.hollowlight.workers.dev/og-image.png",
+        "description": "A free arena survivor for the browser. You're a lantern spirit holding back waves of shadow creatures until dawn.",
+        "genre": ["Action", "Arcade", "Roguelite", "Survivor"],
+        "gamePlatform": ["Web browser", "Desktop", "Mobile"],
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "playMode": "SinglePlayer",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "vishnu2007dev", "url": "https://github.com/vishnu2007dev" },
+        "license": "https://opensource.org/licenses/MIT",
+        "sameAs": ["https://github.com/vishnu2007dev/hollowlight"]
+      }
+    </script>
   </head>
   <body>
-    <div id="game"></div>
+    <!-- Readable by search engines and screen readers; the game itself is drawn on a canvas. -->
+    <main class="sr-only">
+      <h1>Hollowlight: a free browser arena survivor game</h1>
+      <p>
+        You're a lantern spirit holding back waves of shadow creatures until dawn. Move with WASD, the arrow keys or touch;
+        your weapons fire on their own. Level up, pick upgrades, beat two bosses, chain kills for combos and grab pink wisps
+        for big points. Choose Easy or Normal and a 5 or 10 minute run.
+      </p>
+      <p>Free and open source: <a href="https://github.com/vishnu2007dev/hollowlight">source code on GitHub</a>.</p>
+    </main>
+    <noscript><p class="noscript">Hollowlight needs JavaScript to run. Please enable it to play.</p></noscript>
+    <div id="game" role="application" aria-label="Hollowlight game"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
