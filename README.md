@@ -12,7 +12,7 @@ Built from scratch with **Phaser 3 + TypeScript**. No art or audio files: every 
 
 **[▶ Play it in your browser](https://game.hollowlight.workers.dev)**
 
-[![Hollowlight gameplay: a glowing lantern leaves a fire trail as the Great Shadow boss and a huge swarm chase it](docs/gameplay.gif)](https://game.hollowlight.workers.dev)
+[![Hollowlight gameplay: a glowing lantern leaves a fire trail as the Great Shadow boss and a huge swarm chase it](docs/gameplay-boss-fight.gif)](https://game.hollowlight.workers.dev)
 
 ---
 
