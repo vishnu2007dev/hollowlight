@@ -1,16 +1,26 @@
 import { defineConfig, type Plugin } from 'vitest/config';
 
 /**
- * Content Security Policy for the production build. GitHub Pages can't send custom headers,
- * so it goes in a <meta> tag. Only applied to builds: the dev server needs inline scripts for hot reload.
+ * Cloudflare Web Analytics: cookie-free visitor counts. The token is public by design.
+ * Only added to production builds, so local testing never shows up in the stats.
+ */
+const ANALYTICS_TOKEN = '1c309e9089054b6c8c4cb9f0c63e9bad';
+const ANALYTICS_SNIPPET = `<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${ANALYTICS_TOKEN}"}'></script>`;
+
+/**
+ * Content Security Policy for the production build, as a <meta> tag (public/_headers sends the same
+ * policy as a real header on Cloudflare). Only applied to builds: the dev server needs inline scripts for hot reload.
+ * Keep it in sync with public/_headers.
  */
 const CSP = [
   "default-src 'none'",
-  "script-src 'self'",
+  // The only third-party script: Cloudflare's analytics beacon.
+  "script-src 'self' https://static.cloudflareinsights.com",
   "style-src 'self'",
-  // data: covers the inline favicon and Phaser's built-in placeholder textures.
+  // data: covers Phaser's built-in placeholder textures.
   "img-src 'self' data: blob:",
-  "connect-src 'self'",
+  // The beacon reports page views here.
+  "connect-src 'self' https://cloudflareinsights.com",
   "base-uri 'none'",
   "form-action 'none'",
   "object-src 'none'",
@@ -21,22 +31,24 @@ const CSP = [
   "trusted-types 'none'",
 ].join('; ');
 
-function csp(): Plugin {
+function productionHtml(): Plugin {
   return {
-    name: 'hollowlight-csp',
+    name: 'hollowlight-production-html',
     apply: 'build',
     transformIndexHtml: {
       order: 'post',
       handler: (html) =>
-        html.replace('<meta charset="UTF-8" />', `<meta charset="UTF-8" />\n    <meta http-equiv="Content-Security-Policy" content="${CSP}" />`),
+        html
+          .replace('<meta charset="UTF-8" />', `<meta charset="UTF-8" />\n    <meta http-equiv="Content-Security-Policy" content="${CSP}" />`)
+          .replace('</body>', `  ${ANALYTICS_SNIPPET}\n  </body>`),
     },
   };
 }
 
 export default defineConfig({
-  // Relative base so the build works on GitHub Pages under /<repo>/
+  // Relative base so the build works from any folder or host.
   base: './',
-  plugins: [csp()],
+  plugins: [productionHtml()],
   build: {
     target: 'es2022',
     sourcemap: false,

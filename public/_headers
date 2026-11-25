@@ -1,8 +1,9 @@
 # Security headers for Cloudflare (Workers static assets or Pages). Copied to dist/ by Vite.
 # The same CSP is also in a <meta> tag for hosts that can't send headers; a header can
-# additionally block framing (frame-ancestors), which a <meta> tag can't.
+# additionally block framing (frame-ancestors), which a <meta> tag can't. Keep it in sync with vite.config.ts.
+# The only third-party allowance is Cloudflare Web Analytics (script from static.cloudflareinsights.com, reports to cloudflareinsights.com).
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https://cloudflareinsights.com; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types 'none'
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
