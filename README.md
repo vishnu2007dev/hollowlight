@@ -1,6 +1,7 @@
 # 🏮 Hollowlight
 
 [![Play now](https://img.shields.io/badge/%E2%96%B6%20play-in%20your%20browser-ffc35c)](https://game.hollowlight.workers.dev)
+[![itch.io](https://img.shields.io/badge/itch.io-hollowlight-fa5c5c?logo=itchdotio&logoColor=white)](https://hollowlight-dev.itch.io/hollowlight)
 [![CI](https://github.com/vishnu2007dev/hollowlight/actions/workflows/ci.yml/badge.svg)](https://github.com/vishnu2007dev/hollowlight/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![Phaser 3](https://img.shields.io/badge/Phaser-3-8a5cf6)
@@ -10,7 +11,7 @@
 
 Built from scratch with **Phaser 3 + TypeScript**. No art or audio files: every texture is drawn in code and every sound is synthesised with the Web Audio API.
 
-**[▶ Play it in your browser](https://game.hollowlight.workers.dev)**
+**[▶ Play it in your browser](https://game.hollowlight.workers.dev)** · also on **[itch.io](https://hollowlight-dev.itch.io/hollowlight)**
 
 [![Hollowlight gameplay: a glowing lantern leaves a fire trail as the Great Shadow boss and a huge swarm chase it](docs/gameplay-boss-fight.gif)](https://game.hollowlight.workers.dev)
 
