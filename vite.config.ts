@@ -31,16 +31,26 @@ const CSP = [
   "trusted-types 'none'",
 ].join('; ');
 
+/** `--mode itch` builds for itch.io: same game, no analytics (itch.io has its own stats). */
 function productionHtml(): Plugin {
+  let analytics = true;
   return {
     name: 'hollowlight-production-html',
     apply: 'build',
+    configResolved(config) {
+      analytics = config.mode !== 'itch';
+    },
     transformIndexHtml: {
       order: 'post',
-      handler: (html) =>
-        html
-          .replace('<meta charset="UTF-8" />', `<meta charset="UTF-8" />\n    <meta http-equiv="Content-Security-Policy" content="${CSP}" />`)
-          .replace('</body>', `  ${ANALYTICS_SNIPPET}\n  </body>`),
+      handler: (html) => {
+        // Without analytics, nothing outside the game's own origin is allowed at all.
+        const policy = analytics ? CSP : CSP.replace(/ https:\/\/(static\.)?cloudflareinsights\.com/g, '');
+        const withCsp = html.replace(
+          '<meta charset="UTF-8" />',
+          `<meta charset="UTF-8" />\n    <meta http-equiv="Content-Security-Policy" content="${policy}" />`,
+        );
+        return analytics ? withCsp.replace('</body>', `  ${ANALYTICS_SNIPPET}\n  </body>`) : withCsp;
+      },
     },
   };
 }

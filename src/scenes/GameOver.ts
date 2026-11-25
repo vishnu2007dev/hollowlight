@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { COLORS, FONT, SCENES } from '../config';
 import { formatTime } from '../core/director';
 import type { ScoreBreakdown } from '../core/score';
+import { shareText } from '../core/share';
 import { Sound } from '../systems/Audio';
 
 export interface GameOverData {
@@ -61,7 +62,7 @@ export class GameOverScene extends Phaser.Scene {
       onUpdate: () => scoreText.setText(fmt(counter.v)),
     });
     this.add
-      .text(cx, scoreY + 32, data.newBest ? '★ NEW HIGH SCORE ★' : `High score (${data.mode}): ${fmt(data.bestScore)}`, {
+      .text(cx, scoreY + 38, data.newBest ? '★ NEW HIGH SCORE ★' : `High score (${data.mode}): ${fmt(data.bestScore)}`, {
         fontFamily: FONT,
         fontSize: '15px',
         fontStyle: data.newBest ? 'bold' : 'normal',
@@ -96,32 +97,73 @@ export class GameOverScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0);
 
+    // Buttons in one centred row; the font shrinks a little on narrow (phone) screens.
     const y = height * 0.8;
-    this.button(cx - 100, y, 'Play again', () => this.go(SCENES.game));
-    this.button(cx + 100, y, 'Menu', () => this.go(SCENES.menu));
-    this.add
-      .text(cx, y + 44, 'Enter: play again  ·  Esc: menu', { fontFamily: FONT, fontSize: '13px', color: COLORS.textDim })
-      .setOrigin(0.5);
+    const message = shareText({ score: data.score.total, won: data.won, time: data.time, mode: data.mode, newBest: data.newBest });
+    const share = this.button('Share score', () => void this.share(share, message), true);
+    const buttons = [share, this.button('Play again', () => this.go(SCENES.game)), this.button('Menu', () => this.go(SCENES.menu))];
+    const gap = 12;
+    const rowWidth = (): number => buttons.reduce((w, b) => w + b.width, 0) + gap * (buttons.length - 1);
+    if (rowWidth() > width - 20) buttons.forEach((b) => b.setFontSize(16));
+    let left = cx - rowWidth() / 2;
+    for (const b of buttons) {
+      b.setPosition(left + b.width / 2, y);
+      left += b.width + gap;
+    }
+    // Keyboard shortcuts only mean something on devices with a keyboard.
+    if (!(this.sys.game.device.input.touch && width < 600)) {
+      this.add
+        .text(cx, y + 44, 'Enter: play again  ·  S: share  ·  Esc: menu', { fontFamily: FONT, fontSize: '13px', color: COLORS.textDim })
+        .setOrigin(0.5);
+    }
 
     this.input.keyboard!.once('keydown-ENTER', () => this.go(SCENES.game));
     this.input.keyboard!.once('keydown-ESC', () => this.go(SCENES.menu));
+    this.input.keyboard!.on('keydown-S', () => void this.share(share, message));
   }
 
-  private button(x: number, y: number, label: string, onClick: () => void): void {
+  private button(label: string, onClick: () => void, primary = false): Phaser.GameObjects.Text {
+    const bg = primary ? COLORS.lightHex : '#2a2440';
+    const hover = primary ? '#ffd68a' : '#3a3352';
     const b = this.add
-      .text(x, y, label, {
+      .text(0, 0, label, {
         fontFamily: FONT,
         fontSize: '20px',
         fontStyle: 'bold',
-        color: COLORS.text,
-        backgroundColor: '#2a2440',
+        color: primary ? '#1a1526' : COLORS.text,
+        backgroundColor: bg,
         padding: { x: 18, y: 10 },
       })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true });
-    b.on('pointerover', () => b.setBackgroundColor('#3a3352'));
-    b.on('pointerout', () => b.setBackgroundColor('#2a2440'));
+    b.on('pointerover', () => b.setBackgroundColor(hover));
+    b.on('pointerout', () => b.setBackgroundColor(bg));
     b.on('pointerup', onClick);
+    return b;
+  }
+
+  /** Native share sheet where available (phones), otherwise copy to the clipboard. */
+  private async share(button: Phaser.GameObjects.Text, text: string): Promise<void> {
+    Sound.play('select');
+    const label = 'Share score';
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Hollowlight', text });
+        return;
+      } catch (err) {
+        // Closing the share sheet isn't an error; anything else falls back to the clipboard.
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      button.setText('Copied! ✓');
+    } catch {
+      // Clipboard blocked (old browser, embedded frame): show the text so it can be copied by hand.
+      window.prompt('Copy your score to share it:', text);
+      return;
+    }
+    this.time.delayedCall(2000, () => button.active && button.setText(label));
   }
 
   private go(key: string): void {

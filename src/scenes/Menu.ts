@@ -34,12 +34,14 @@ export class MenuScene extends Phaser.Scene {
     });
 
     const cx = width / 2;
-    const glow = this.add.image(cx, height * 0.3, 'glow').setScale(6).setTint(COLORS.light).setAlpha(0.3).setBlendMode(Phaser.BlendModes.ADD);
+    // Short screens (small phones, landscape laptops) move the logo up so it clears the mode pickers.
+    const logoY = height < 720 ? height * 0.2 : height * 0.3;
+    const glow = this.add.image(cx, logoY, 'glow').setScale(6).setTint(COLORS.light).setAlpha(0.3).setBlendMode(Phaser.BlendModes.ADD);
     this.tweens.add({ targets: glow, alpha: 0.45, scale: 6.6, duration: 1800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    this.add.image(cx, height * 0.3, 'player').setScale(1.6);
+    this.add.image(cx, logoY, 'player').setScale(1.6);
 
     this.add
-      .text(cx, height * 0.3 + 70, 'HOLLOWLIGHT', {
+      .text(cx, logoY + 70, 'HOLLOWLIGHT', {
         fontFamily: FONT,
         fontSize: `${Math.min(64, width / 9)}px`,
         fontStyle: 'bold',
@@ -49,7 +51,7 @@ export class MenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
     this.add
-      .text(cx, height * 0.3 + 118, 'Hold back the dark until dawn.', { fontFamily: FONT, fontSize: '17px', color: COLORS.textDim })
+      .text(cx, logoY + 118, 'Hold back the dark until dawn.', { fontFamily: FONT, fontSize: '17px', color: COLORS.textDim })
       .setOrigin(0.5);
 
     const start = this.add
@@ -66,18 +68,33 @@ export class MenuScene extends Phaser.Scene {
     this.tweens.add({ targets: start, scale: 1.05, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     start.on('pointerup', () => this.startGame());
 
-    this.add
-      .text(cx, height * 0.62 + 58, "WASD / Arrows or drag to move  ·  weapons fire automatically  ·  Esc to pause\nChain kills for a combo  ·  grab pink wisps for big points  ·  don't get hit", {
+    // Short, touch-friendly instructions on phones; keyboard hints on desktop.
+    const narrow = width < 600;
+    const touch = this.sys.game.device.input.touch && narrow;
+    const hintText = touch
+      ? 'Drag anywhere to move  ·  weapons fire on their own\nChain kills for combos  ·  grab pink wisps for big points'
+      : "WASD / arrows to move  ·  weapons fire on their own  ·  Esc to pause\nChain kills for a combo  ·  grab pink wisps for big points  ·  don't get hit";
+    const hint = this.add
+      .text(cx, height * 0.62 + 58, hintText, {
         fontFamily: FONT,
-        fontSize: '14px',
+        fontSize: narrow ? '13px' : '14px',
         color: COLORS.textDim,
         align: 'center',
-        wordWrap: { width: width - 40 },
+        lineSpacing: 4,
+        wordWrap: { width: width - 32 },
       })
       .setOrigin(0.5, 0);
 
+    // Records sit right under the hint, however many lines it wrapped to.
     const records = this.add
-      .text(cx, height * 0.62 + 112, '', { fontFamily: FONT, fontSize: '14px', color: COLORS.lightHex, align: 'center', wordWrap: { width: width - 40 } })
+      .text(cx, hint.y + hint.height + 14, '', {
+        fontFamily: FONT,
+        fontSize: narrow ? '13px' : '14px',
+        color: COLORS.lightHex,
+        align: 'center',
+        lineSpacing: 4,
+        wordWrap: { width: width - 32 },
+      })
       .setOrigin(0.5, 0);
     let mode: Difficulty = save.difficulty;
     let length: RunLength = save.runLength;
@@ -86,7 +103,7 @@ export class MenuScene extends Phaser.Scene {
       const name = `${DIFFICULTIES[mode].label} · ${RUN_LENGTHS[length].label}`;
       records.setText(
         r.runs > 0
-          ? `${name} high score: ${r.bestScore.toLocaleString('en-US')}  ·  Best time: ${formatTime(r.bestTime)}  ·  Dawns: ${r.wins}`
+          ? `${name} high score: ${r.bestScore.toLocaleString('en-US')}${narrow ? '\n' : '  ·  '}Best time: ${formatTime(r.bestTime)}  ·  Dawns: ${r.wins}`
           : '',
       );
     };
@@ -128,14 +145,18 @@ export class MenuScene extends Phaser.Scene {
     kb.on('keydown-DOWN', () => lengthPicker.step(1));
     showRecords();
 
-    this.makeToggle(width - 16, height - 16, 'Sound', save.sound, (on) => {
+    // Phone browsers float their toolbars over the bottom of the page, so on touch screens the
+    // settings and footer go in the top corners instead.
+    const top = touch;
+    const toggleY = (row: number): number => (top ? 16 + 26 * (row + 1) : height - 16 - 28 * row);
+    this.makeToggle(width - 16, toggleY(0), 'Sound', save.sound, (on) => {
       Sound.enabled = on;
       Save.update({ sound: on });
     });
-    this.makeToggle(width - 16, height - 44, 'Screen shake', save.shake, (on) => Save.update({ shake: on }));
+    this.makeToggle(width - 16, toggleY(1), 'Screen shake', save.shake, (on) => Save.update({ shake: on }));
 
     this.add
-      .text(16, height - 16, 'Open source · MIT', { fontFamily: FONT, fontSize: '12px', color: COLORS.textDim })
+      .text(16, top ? 16 + 26 : height - 16, 'Open source · MIT', { fontFamily: FONT, fontSize: '12px', color: COLORS.textDim })
       .setOrigin(0, 1);
 
     this.input.keyboard!.once('keydown-ENTER', () => this.startGame());

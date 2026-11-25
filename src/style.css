@@ -8,6 +8,8 @@ body {
 #game {
   width: 100vw;
   height: 100vh;
+  /* Dynamic viewport height: excludes mobile browser toolbars (Safari's bottom bar) so nothing hides behind them. */
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;

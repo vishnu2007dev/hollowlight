@@ -1,5 +1,6 @@
 node_modules
 dist
+dist-itch
 *.log
 .DS_Store
 coverage
@@ -15,3 +16,4 @@ coverage
 .dev.vars*
 !.dev.vars.example
 !.env.example
+promo/

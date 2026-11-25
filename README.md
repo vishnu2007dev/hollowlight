@@ -1,12 +1,18 @@
 # 🏮 Hollowlight
 
+[![Play now](https://img.shields.io/badge/%E2%96%B6%20play-in%20your%20browser-ffc35c)](https://game.hollowlight.workers.dev)
+[![CI](https://github.com/vishnu2007dev/hollowlight/actions/workflows/ci.yml/badge.svg)](https://github.com/vishnu2007dev/hollowlight/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![Phaser 3](https://img.shields.io/badge/Phaser-3-8a5cf6)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
+
 **A tiny arena survivor for the browser.** You're a lantern spirit holding back an endless tide of shadow creatures. Survive until dawn: a quick 5-minute run or the full 10.
 
 Built from scratch with **Phaser 3 + TypeScript**. No art or audio files: every texture is drawn in code and every sound is synthesised with the Web Audio API.
 
 **[▶ Play it in your browser](https://game.hollowlight.workers.dev)**
 
-<!-- Add a gameplay GIF or screenshot here, e.g. ![Gameplay](docs/gameplay.gif) -->
+[![Hollowlight gameplay: a glowing lantern with orbiting blades fighting a swarm of shadow creatures](docs/gameplay.gif)](https://game.hollowlight.workers.dev)
 
 ---
 
@@ -25,7 +31,8 @@ Built from scratch with **Phaser 3 + TypeScript**. No art or audio files: every 
 - **300+ enemies on screen at 60 fps**, using object pooling and a custom spatial hash
 - **Feel**: hit flashes, particles, damage numbers, screen shake and synthesised sound effects
 - **Plays anywhere**: keyboard on desktop, a floating virtual joystick on touch screens, responsive layout
-- Best time, kills and settings saved in `localStorage`
+- **Share your score** from the results screen: the native share sheet on phones, a copied message with a link on desktop
+- High scores, best times and settings saved in `localStorage`
 
 ## Controls
 
@@ -36,6 +43,7 @@ Built from scratch with **Phaser 3 + TypeScript**. No art or audio files: every 
 | Move | WASD / Arrow keys | Press and drag anywhere |
 | Pick upgrade | 1 / 2 / 3 | Tap a card |
 | Pause | Esc / P | (auto-pauses when the tab loses focus) |
+| Share score (results screen) | S | Tap **Share score** |
 | FPS counter | F | |
 
 ## Run it locally
@@ -53,6 +61,7 @@ npm run dev
 | `npm test` | Unit tests (Vitest) |
 | `npm run lint` / `npm run typecheck` | ESLint / `tsc --noEmit` |
 | `npm run build` | Production build to `dist/` |
+| `npm run build:itch` | Build for itch.io and other game sites (no analytics) to `dist-itch/` |
 
 ## Architecture
 
